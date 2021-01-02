@@ -32,6 +32,12 @@ export class CustomerComponent implements OnInit {
       lastName: {value: 'n/a', disabled: false},
       email: "",
       sendCatalog: {value: true, disabled: false},// Get more fancy
+      addressType: false,
+      street1: "",
+      street2: "",
+      city: "",
+      state: "",
+      zip: "",
     });
   }
 
