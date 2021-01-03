@@ -1,9 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 // import { NgForm } from '@angular/forms';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
 import { Customer } from './customer';
 
+// Custom validator added outside the component class
+  // if parameters are needed, you must have a 'factory' function to wrap it
+function ratingRange(min: number, max: number): ValidatorFn {
+  return (c: AbstractControl): { [key: string]: boolean } | null => {
+    if(c.value !== null && (isNaN(c.value) || c.value < min || c.value > max)) {
+      return { 'range': true };
+    }
+    return null;
+  };
+}
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -37,6 +47,7 @@ export class CustomerComponent implements OnInit {
       sendCatalog: {value: true, disabled: false},// Get more fancy
       phone: '',
       notification: 'email',
+      rating: [null, ratingRange(1,5)],
 
       // Mine added for the rest of old form
       addressType: false,
