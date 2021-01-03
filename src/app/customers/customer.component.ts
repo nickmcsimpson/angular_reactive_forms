@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // import { NgForm } from '@angular/forms';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { Customer } from './customer';
 
@@ -28,10 +28,17 @@ export class CustomerComponent implements OnInit {
 
     // Using FormBuilder
     this.customerForm = this.fb.group({
-      firstName: "",
-      lastName: {value: 'n/a', disabled: false},
-      email: "",
+      // Initialize with [] for validation
+        // 1: value 2: [] of validators 3: [] async validators
+      firstName: ['', 
+        [Validators.required, Validators.minLength(3)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
       sendCatalog: {value: true, disabled: false},// Get more fancy
+      phone: '',
+      notification: 'email',
+
+      // Mine added for the rest of old form
       addressType: false,
       street1: "",
       street2: "",
@@ -62,4 +69,14 @@ export class CustomerComponent implements OnInit {
   //   console.log(customerForm.form);
   //   console.log('Saved: ' + JSON.stringify(customerForm.value));
   // }
+
+  setNotification(notifyVia: string): void {
+    const phoneControl = this.customerForm.get('phone');
+    if(notifyVia === 'text') {
+      phoneControl.setValidators(Validators.required);
+    } else {
+      phoneControl.clearValidators();
+    }
+    phoneControl.updateValueAndValidity();
+  }
 }
