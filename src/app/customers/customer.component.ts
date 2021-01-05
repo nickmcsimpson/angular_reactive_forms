@@ -4,6 +4,20 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from
 
 import { Customer } from './customer';
 
+function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
+  const emailControl = c.get('email');
+  const confirmControl = c.get('confirmEmail');
+
+  if (emailControl.pristine || confirmControl.pristine) {
+    return null;
+  }
+
+  if (emailControl.value === confirmControl.value) {
+    return null;
+  }
+  return { 'match': true };
+}
+
 // Custom validator added outside the component class
   // if parameters are needed, you must have a 'factory' function to wrap it
 function ratingRange(min: number, max: number): ValidatorFn {
@@ -43,7 +57,10 @@ export class CustomerComponent implements OnInit {
       firstName: ['', 
         [Validators.required, Validators.minLength(3)]],
       lastName: ['', [Validators.required, Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
+      emailGroup: this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        confirmEmail: ['', Validators.required],
+      }, {validator: emailMatcher}),
       sendCatalog: {value: true, disabled: false},// Get more fancy
       phone: '',
       notification: 'email',
