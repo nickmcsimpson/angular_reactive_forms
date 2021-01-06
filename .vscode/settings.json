@@ -1,4 +1,5 @@
 {
   "files.autoSave": "afterDelay",
-  "html.format.wrapAttributes": "force-aligned"
+  "html.format.wrapAttributes": "force-aligned",
+  "terminal.integrated.automationShell.windows": "C:\\WINDOWS\\System32\\wsl.exe"
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 // import { NgForm } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
+import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
 
 function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
@@ -36,6 +37,12 @@ function ratingRange(min: number, max: number): ValidatorFn {
 export class CustomerComponent implements OnInit {
   customerForm: FormGroup;
   customer = new Customer();
+  emailMessage: string;
+
+  private validationMessages = {
+    required: 'Please enter your email address.',
+    email: 'Please enter a valid email address.',
+  };
 
   constructor(private fb: FormBuilder) { }
 
@@ -74,6 +81,18 @@ export class CustomerComponent implements OnInit {
       state: "",
       zip: "",
     });
+
+    // Add watchers to input forms
+    this.customerForm.get('notification').valueChanges.subscribe(
+      value => this.setNotification(value)
+    )
+
+    const emailControl = this.customerForm.get('emailGroup.email');
+    emailControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      valud => this.setMessage(emailControl)
+    );
   }
 
   populateTestData(): void {
@@ -98,6 +117,15 @@ export class CustomerComponent implements OnInit {
   //   console.log('Saved: ' + JSON.stringify(customerForm.value));
   // }
 
+  // Handle error messages in code with Observables
+  setMessage(c: AbstractControl): void {
+    this.emailMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      this.emailMessage = Object.keys(c.errors).map(
+        key => this.validationMessages[key]).join(' ');
+    }
+  }
+
   setNotification(notifyVia: string): void {
     const phoneControl = this.customerForm.get('phone');
     if(notifyVia === 'text') {
@@ -107,4 +135,11 @@ export class CustomerComponent implements OnInit {
     }
     phoneControl.updateValueAndValidity();
   }
+  /**
+   * Reactive transformations
+   * 
+   * debounceTime() ignores until time has passed
+   * throttleTime() emits, then ignores for a time
+   * distinctUntilChanged() suppresses duplicate consecutive items
+   */
 }
