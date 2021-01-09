@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // import { NgForm } from '@angular/forms';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 
 import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
@@ -39,6 +39,10 @@ export class CustomerComponent implements OnInit {
   customer = new Customer();
   emailMessage: string;
 
+  get addresses(): FormArray {
+    return <FormArray>this.customerForm.get('addresses');
+  }
+
   private validationMessages = {
     required: 'Please enter your email address.',
     email: 'Please enter a valid email address.',
@@ -73,13 +77,8 @@ export class CustomerComponent implements OnInit {
       notification: 'email',
       rating: [null, ratingRange(1,5)],
 
-      // Mine added for the rest of old form
-      addressType: false,
-      street1: "",
-      street2: "",
-      city: "",
-      state: "",
-      zip: "",
+      // Form Group Array for dynamic duplication
+      addresses: this.fb.array([ this.buildAddress() ]),           
     });
 
     // Add watchers to input forms
@@ -93,6 +92,23 @@ export class CustomerComponent implements OnInit {
     ).subscribe(
       valud => this.setMessage(emailControl)
     );
+  }
+
+  addAddress(): void {
+    this.addresses.push(this.buildAddress());
+  }
+
+  // Return FG for dynamic duplication
+  buildAddress(): FormGroup {
+    return this.fb.group({
+      // Mine added for the rest of old form
+      addressType: "home",
+      street1: "",
+      street2: "",
+      city: "",
+      state: "",
+      zip: "",
+    })
   }
 
   populateTestData(): void {
