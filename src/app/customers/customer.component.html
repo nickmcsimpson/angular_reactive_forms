@@ -215,10 +215,10 @@
                 now use attr.for
               -->
                 <label class="col-md-2 col-form-label"
-                       attr.for="{{ 'street1' + i }}">Street Address 1</label>
+                       attr.for="{{ 'street1' + indexOfAddress }}">Street Address 1</label>
                 <div class="col-md-8">
                   <input class="form-control"
-                         id="{{ 'street1' + i }}"
+                         id="{{ 'street1' + indexOfAddress }}"
                          type="text"
                          placeholder="Street address"
                          formControlName="street1">
@@ -227,10 +227,10 @@
 
               <div class="form-group row mb-2">
                 <label class="col-md-2 col-form-label"
-                       for="street2Id">Street Address 2</label>
+                       for="{{ 'street2Id' + indexOfAddress }}">Street Address 2</label>
                 <div class="col-md-8">
                   <input class="form-control"
-                         id="street2Id"
+                         id="{{ 'street2Id' + indexOfAddress }}"
                          type="text"
                          placeholder="Street address (second line)"
                          formControlName="street2">
@@ -239,17 +239,17 @@
 
               <div class="form-group row mb-2">
                 <label class="col-md-2 col-form-label"
-                       for="cityId">City, State, Zip Code</label>
+                       for="{{ 'cityId' + indexOfAddress }}">City, State, Zip Code</label>
                 <div class="col-md-3">
                   <input class="form-control"
-                         id="cityId"
+                         id="{{ 'cityId' + indexOfAddress }}"
                          type="text"
                          placeholder="City"
                          formControlName="city">
                 </div>
                 <div class="col-md-3">
                   <select class="form-control"
-                          id="stateId"
+                          id="{{ 'stateId' + indexOfAddress }}"
                           formControlName="state">
                     <option value=""
                             disabled
@@ -267,7 +267,7 @@
                 </div>
                 <div class="col-md-2">
                   <input class="form-control"
-                         id="zipId"
+                         id="{{ 'zipId' + indexOfAddress }}"
                          type="number"
                          placeholder="Zip Code"
                          formControlName="zip">
